@@ -6,9 +6,15 @@
     <title>timezone-overlap-map</title>
     <style>
       :root { color-scheme: light dark; }
-      body { margin: 0 auto; padding: 2rem 1rem; max-width: 48rem; font: 16px/1.5 system-ui, sans-serif; }
+      body { margin: 0 auto; background: Canvas; color: CanvasText; padding: 2rem 1rem; max-width: 48rem; font: 16px/1.5 system-ui, sans-serif; }
       pre { font-size: 0.875rem; opacity: 0.7; }
     </style>
+    <script>
+      // before the element renders: it reads the page's lang once
+      const page = new URLSearchParams(location.search);
+      if (page.get('lang')) document.documentElement.lang = page.get('lang');
+      if (page.get('scheme')) document.documentElement.style.colorScheme = page.get('scheme');
+    </script>
     <script type="module" src="/src/index.ts"></script>
   </head>
   <body>
@@ -17,9 +23,11 @@
     <pre id="log"></pre>
     <script type="module">
       const map = document.querySelector('timezone-overlap-map');
-      // ?visitor=Asia/Tokyo to try another zone
-      const visitor = new URLSearchParams(location.search).get('visitor');
+      // ?visitor=Asia/Tokyo&lang=es&scheme=light to try other setups
+      const params = new URLSearchParams(location.search);
+      const visitor = params.get('visitor');
       if (visitor) map.setAttribute('visitor-zone', visitor);
+
       map.addEventListener('zonechange', (event) => {
         document.getElementById('log').textContent = `zonechange → ${event.detail.zone}`;
       });

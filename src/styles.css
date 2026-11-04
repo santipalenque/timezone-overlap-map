@@ -8,8 +8,9 @@
   --_visitor: var(--tom-visitor, oklch(0.75 0.15 70));
   --_both: var(--tom-overlap, oklch(0.72 0.17 145));
   --_land: var(--tom-land, color-mix(in oklch, var(--_fg) 22%, transparent));
-  --_night: var(--tom-night, oklch(0 0 0 / 0.42));
-  --_sun: var(--tom-sun, oklch(0.97 0.06 95));
+  /* follow the page's color-scheme: a dark veil reads as night on both, but lighter on light */
+  --_night: var(--tom-night, light-dark(oklch(0.3 0.03 260 / 0.16), oklch(0 0 0 / 0.42)));
+  --_sun: var(--tom-sun, light-dark(oklch(0.78 0.16 75), oklch(0.97 0.06 95)));
   --_radius: var(--tom-radius, 4px);
 
   display: block;
@@ -23,6 +24,7 @@
 }
 
 .widget {
+  container-type: inline-size;
   display: grid;
   gap: 1rem;
 }
@@ -74,6 +76,22 @@
 
 .dot.visitor {
   fill: var(--_visitor);
+}
+
+/* the map scales down with the widget: keep the dots and the sun visible on a phone */
+@container (width < 480px) {
+  .dot {
+    r: 4;
+    stroke-width: 1;
+  }
+
+  .sun {
+    r: 3.5;
+  }
+
+  .sun-halo {
+    r: 9;
+  }
 }
 
 .clocks {

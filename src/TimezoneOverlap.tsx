@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { DAY, joinAcrossMidnight, mod, offsetMinutes, overlap, shift, type Segment } from './overlap';
+import { MESSAGES, type Lang } from './messages';
 import { WorldMap } from './WorldMap';
 import { cityName, listZones } from './zones';
 
@@ -10,6 +11,7 @@ export type TimezoneOverlapProps = {
   /** Working hours, in each zone's local time. */
   workStart: number;
   workEnd: number;
+  lang: Lang;
   onVisitorZoneChange?: (zone: string) => void;
 };
 
@@ -22,8 +24,9 @@ function useNow(intervalMs = 60_000): Date {
   return now;
 }
 
-const clock = (date: Date, timeZone: string) =>
-  new Intl.DateTimeFormat(undefined, { timeZone, hour: '2-digit', minute: '2-digit' }).format(date);
+// 24-hour, like the timeline and the summary
+const clock = (date: Date, timeZone: string, lang: Lang) =>
+  new Intl.DateTimeFormat(lang, { timeZone, hour: '2-digit', minute: '2-digit', hourCycle: 'h23' }).format(date);
 
 const hhmm = (minutes: number) => {
   const m = mod(minutes);
@@ -61,8 +64,10 @@ export function TimezoneOverlap({
   visitorZone: initialVisitorZone,
   workStart,
   workEnd,
+  lang,
   onVisitorZoneChange,
 }: TimezoneOverlapProps) {
+  const t = MESSAGES[lang];
   const now = useNow();
   const [visitorZone, setVisitorZone] = useState(initialVisitorZone);
   const zones = useMemo(() => listZones([homeZone, visitorZone]), [homeZone, visitorZone]);
@@ -89,18 +94,18 @@ export function TimezoneOverlap({
       <div className="clocks">
         <p className="clock">
           <span className="swatch home" aria-hidden="true" />
-          {home} <time>{clock(now, homeZone)}</time>
+          {home} <time>{clock(now, homeZone, lang)}</time>
         </p>
         <label className="clock">
           <span className="swatch visitor" aria-hidden="true" />
-          <select value={visitorZone} onChange={(event) => choose(event.target.value)}>
+          <select aria-label={t.zoneLabel} value={visitorZone} onChange={(event) => choose(event.target.value)}>
             {zones.map((zone) => (
               <option key={zone} value={zone}>
                 {zone.replaceAll('_', ' ')}
               </option>
             ))}
           </select>
-          <time>{clock(now, visitorZone)}</time>
+          <time>{clock(now, visitorZone, lang)}</time>
         </label>
       </div>
 
@@ -120,8 +125,8 @@ export function TimezoneOverlap({
 
       <p className="summary" role="status">
         {result.minutes > 0
-          ? `${duration(result.minutes)} of overlap with ${home}: ${ranges(shift(result.both, local))} your time.`
-          : `No working-hours overlap with ${home}.`}
+          ? t.overlap(duration(result.minutes), home, ranges(shift(result.both, local)))
+          : t.none(home)}
       </p>
     </div>
   );

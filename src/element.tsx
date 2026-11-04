@@ -2,12 +2,13 @@ import { StrictMode } from 'react';
 import { createRoot, type Root } from 'react-dom/client';
 import { TimezoneOverlap } from './TimezoneOverlap';
 import { isValidZone } from './overlap';
+import { resolveLang } from './messages';
 import { detectZone } from './zones';
 import css from './styles.css?inline';
 
 export const TAG_NAME = 'timezone-overlap-map';
 
-const ATTRIBUTES = ['home-zone', 'home-label', 'visitor-zone', 'work-start', 'work-end'] as const;
+const ATTRIBUTES = ['home-zone', 'home-label', 'visitor-zone', 'work-start', 'work-end', 'lang'] as const;
 
 export type ZoneChangeEvent = CustomEvent<{ zone: string }>;
 
@@ -37,7 +38,8 @@ function hour(value: string | null, fallback: number): number {
  * `<timezone-overlap-map home-zone="America/Argentina/Buenos_Aires">`
  *
  * Attributes: `home-zone` (IANA name), `home-label`, `visitor-zone` (defaults to the
- * browser's zone), `work-start` / `work-end` (local hours, default 9 and 18).
+ * browser's zone), `work-start` / `work-end` (local hours, default 9 and 18), `lang`
+ * (`en` or `es`; defaults to the closest `lang` up the tree, like the page's `<html lang>`).
  * Fires `zonechange` (detail: `{ zone }`) when the visitor picks another zone.
  */
 export class TimezoneOverlapMapElement extends BaseElement {
@@ -90,6 +92,7 @@ export class TimezoneOverlapMapElement extends BaseElement {
           visitorZone={visitorZone}
           workStart={hour(this.getAttribute('work-start'), 9)}
           workEnd={hour(this.getAttribute('work-end'), 18)}
+          lang={resolveLang(this.closest('[lang]')?.getAttribute('lang'))}
           onVisitorZoneChange={(zone) =>
             this.dispatchEvent(
               new CustomEvent('zonechange', { detail: { zone }, bubbles: true, composed: true }),

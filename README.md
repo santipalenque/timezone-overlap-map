@@ -40,6 +40,9 @@ The visitor's zone comes from the browser (`Intl`), with no IP lookup. A selecto
 | `visitor-zone` | the browser's zone | Starting zone for the visitor |
 | `work-start` | `9` | Start of working hours, local time in each zone |
 | `work-end` | `18` | End of working hours (a value before `work-start` means a night shift) |
+| `lang` | the closest `lang` up the tree | `en` or `es`; any other language falls back to English |
+
+The language is read when the element renders and whenever its own attributes change; if you switch the page's `<html lang>` on the client, set `lang` on the element too.
 
 Offsets are computed with `Intl` for the current date, so daylight saving time on either side is always right.
 
@@ -71,6 +74,8 @@ timezone-overlap-map {
 }
 ```
 
+The night and the sun have defaults for both light and dark pages, picked through the page's `color-scheme`.
+
 ### Server rendering
 
 Importing the package on the server is safe: the element registers only where `customElements` exists.
@@ -83,6 +88,15 @@ yarn dev       # demo page at http://localhost:5173
 yarn test
 yarn build     # dist/: ES module + type declarations
 yarn geo       # regenerate src/geo.ts (map outline + zone coordinates)
+```
+
+## Releasing
+
+Push a `v*` tag matching `version` in `package.json`; the Release workflow tests, builds and publishes to npm with [provenance](https://docs.npmjs.com/generating-provenance-statements), through npm trusted publishing (no token stored in the repo).
+
+```sh
+npm version patch   # bumps package.json and creates the tag
+git push --follow-tags
 ```
 
 ## Data

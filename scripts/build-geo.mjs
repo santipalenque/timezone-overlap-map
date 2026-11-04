@@ -124,7 +124,7 @@ export const MAP_NORTH = ${NORTH};
 export const MAP_WIDTH = 360;
 export const MAP_HEIGHT = ${NORTH - SOUTH};
 
-export const LAND_PATH =
+export const LAND_PATH: string =
   ${JSON.stringify(landPath)};
 
 /** [latitude, longitude] of each zone's main location. */

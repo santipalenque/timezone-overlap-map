@@ -1,6 +1,6 @@
 {
   "name": "timezone-overlap-map",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "description": "A web component that shows two timezones and how their working hours overlap",
   "license": "MIT",
   "author": "Santiago Palenque",
@@ -8,6 +8,8 @@
     "type": "git",
     "url": "git+https://github.com/santipalenque/timezone-overlap-map.git"
   },
+  "homepage": "https://github.com/santipalenque/timezone-overlap-map#readme",
+  "bugs": "https://github.com/santipalenque/timezone-overlap-map/issues",
   "keywords": [
     "timezone",
     "web-component",
@@ -32,7 +34,8 @@
     "build": "vite build && tsc -p tsconfig.build.json",
     "test": "vitest run",
     "typecheck": "tsc --noEmit",
-    "geo": "node scripts/build-geo.mjs"
+    "geo": "node scripts/build-geo.mjs",
+    "prepublishOnly": "yarn test && yarn build"
   },
   "peerDependencies": {
     "react": "^18.2.0 || ^19.0.0",

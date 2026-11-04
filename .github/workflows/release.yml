@@ -1,0 +1,27 @@
+# Publishes to npm when a v* tag is pushed. Uses npm trusted publishing (OIDC):
+# no token in the repo, and provenance is attached to every release.
+name: Release
+
+on:
+  push:
+    tags: ['v*']
+
+jobs:
+  publish:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: read
+      id-token: write
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          # trusted publishing needs npm 11.5.1+, which ships with Node 24
+          node-version: 24
+          cache: yarn
+          registry-url: https://registry.npmjs.org
+      - name: Tag matches package.json
+        run: test "v$(node -p 'require("./package.json").version')" = "$GITHUB_REF_NAME"
+      - run: yarn install --frozen-lockfile
+      - run: yarn typecheck
+      - run: npm publish --provenance --access public

@@ -52,6 +52,19 @@ describe('<timezone-overlap-map>', () => {
     expect(listener.mock.calls[0]![0].detail).toEqual({ zone: 'Asia/Tokyo' });
   });
 
+  it('speaks the language of its lang attribute, or of the page', async () => {
+    const el = await mount({ 'home-zone': 'UTC', 'visitor-zone': 'UTC', 'home-label': 'Santiago', lang: 'es-AR' });
+    expect(summary(el)).toContain('9 h en común con Santiago');
+
+    document.documentElement.lang = 'es';
+    const inherited = await mount({ 'home-zone': 'UTC', 'visitor-zone': 'UTC' });
+    expect(summary(inherited)).toContain('en común');
+    document.documentElement.removeAttribute('lang');
+
+    await act(async () => el.setAttribute('lang', 'fr'));
+    expect(summary(el)).toContain('of overlap');
+  });
+
   it('falls back to UTC for an invalid home zone', async () => {
     const el = await mount({ 'home-zone': 'Not/AZone', 'visitor-zone': 'UTC' });
     expect(summary(el)).toContain('with UTC');
