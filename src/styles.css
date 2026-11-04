@@ -8,15 +8,22 @@
   --_visitor: var(--tom-visitor, oklch(0.75 0.15 70));
   --_both: var(--tom-overlap, oklch(0.72 0.17 145));
   --_land: var(--tom-land, color-mix(in oklch, var(--_fg) 22%, transparent));
-  /* follow the page's color-scheme: a dark veil reads as night on both, but lighter on light */
-  --_night: var(--tom-night, light-dark(oklch(0.3 0.03 260 / 0.16), oklch(0 0 0 / 0.42)));
-  --_sun: var(--tom-sun, light-dark(oklch(0.78 0.16 75), oklch(0.97 0.06 95)));
+  --_night: var(--tom-night, oklch(0 0 0 / 0.42));
+  --_sun: var(--tom-sun, oklch(0.97 0.06 95));
   --_radius: var(--tom-radius, 4px);
 
   display: block;
   font: var(--tom-font, inherit);
   color: var(--_fg);
   background: var(--_bg);
+}
+
+/* follow the page's color-scheme: a lighter veil and a deeper sun on light pages */
+@supports (color: light-dark(black, white)) {
+  :host {
+    --_night: var(--tom-night, light-dark(oklch(0.3 0.03 260 / 0.16), oklch(0 0 0 / 0.42)));
+    --_sun: var(--tom-sun, light-dark(oklch(0.78 0.16 75), oklch(0.97 0.06 95)));
+  }
 }
 
 :host([hidden]) {
