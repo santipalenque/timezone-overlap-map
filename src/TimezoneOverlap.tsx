@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from 'react';
 import { DAY, joinAcrossMidnight, mod, offsetMinutes, overlap, shift, type Segment } from './overlap';
+import { WorldMap } from './WorldMap';
 import { cityName, listZones } from './zones';
 
 export type TimezoneOverlapProps = {
@@ -83,6 +84,8 @@ export function TimezoneOverlap({
 
   return (
     <div className="widget">
+      <WorldMap homeZone={homeZone} visitorZone={visitorZone} now={now} />
+
       <div className="clocks">
         <p className="clock">
           <span className="swatch home" aria-hidden="true" />

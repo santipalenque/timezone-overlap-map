@@ -1,8 +1,12 @@
 # timezone-overlap-map
 
-A web component that shows your timezone next to your visitor's, and how your working hours overlap. Built with React and TypeScript, shipped as a standard custom element, so it works in any framework or in plain HTML.
+A web component that shows your timezone next to your visitor's on a world map, and how your working hours overlap. Built with React and TypeScript, shipped as a standard custom element, so it works in any framework or in plain HTML.
 
-> Work in progress: the world map is next. Today the widget shows both clocks, a 24-hour timeline and the overlap.
+- A world map with each zone's UTC-offset strip, a dot per city, and the live day/night line with the sun's position.
+- Both clocks and a zone picker that starts at the visitor's zone.
+- A 24-hour timeline in the visitor's local time, and the overlap as text for screen readers.
+
+About 15 KB gzipped, map included, plus React.
 
 ## Install
 
@@ -59,6 +63,9 @@ timezone-overlap-map {
   --tom-home: #4fd1c5;
   --tom-visitor: #f6ad55;
   --tom-overlap: #68d391;
+  --tom-land: #ffffff38;
+  --tom-night: #00000066;
+  --tom-sun: #fff7d6;
   --tom-radius: 4px;
   --tom-font: 14px/1.5 system-ui;
 }
@@ -75,7 +82,15 @@ yarn
 yarn dev       # demo page at http://localhost:5173
 yarn test
 yarn build     # dist/: ES module + type declarations
+yarn geo       # regenerate src/geo.ts (map outline + zone coordinates)
 ```
+
+## Data
+
+- Land outline: [Natural Earth](https://www.naturalearthdata.com/) 1:110m (public domain), via [world-atlas](https://github.com/topojson/world-atlas).
+- Zone locations: [IANA tz database](https://www.iana.org/time-zones) (`zone.tab`, plus links so the names `Intl` returns resolve).
+
+Both are converted once by `scripts/build-geo.mjs` into a compact SVG path and a coordinate table; the package has no runtime dependencies besides React.
 
 ## License
 

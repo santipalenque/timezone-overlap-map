@@ -48,9 +48,12 @@ export function toSegments(start: number, length: number): Segment[] {
   return e <= DAY ? [{ start: s, end: e }] : [{ start: 0, end: e - DAY }, { start: s, end: DAY }];
 }
 
-/** Moves segments by `minutes` (e.g. UTC → a zone's local time), re-splitting at midnight. */
+/**
+ * Moves segments by `minutes` (e.g. UTC → a zone's local time), re-splitting at midnight
+ * and joining pieces that now touch: a range split at UTC midnight is whole again locally.
+ */
 export function shift(segments: Segment[], minutes: number): Segment[] {
-  return sortSegments(segments.flatMap((seg) => toSegments(seg.start + minutes, seg.end - seg.start)));
+  return merge(segments.flatMap((seg) => toSegments(seg.start + minutes, seg.end - seg.start)));
 }
 
 export function intersect(a: Segment[], b: Segment[]): Segment[] {
@@ -98,6 +101,17 @@ export function overlap(
   const visitor = workSegmentsUtc(visitorZone, workStart, workEnd, date);
   const both = intersect(home, visitor);
   return { home, visitor, both, minutes: totalMinutes(both) };
+}
+
+/** Sorted, with touching or overlapping segments joined. */
+export function merge(segments: Segment[]): Segment[] {
+  const out: Segment[] = [];
+  for (const seg of sortSegments(segments)) {
+    const last = out[out.length - 1];
+    if (last && seg.start <= last.end) last.end = Math.max(last.end, seg.end);
+    else out.push({ ...seg });
+  }
+  return out;
 }
 
 function sortSegments(segments: Segment[]): Segment[] {

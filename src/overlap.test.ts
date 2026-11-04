@@ -59,6 +59,12 @@ describe('display helpers', () => {
     expect(shift([{ start: 12 * 60, end: 21 * 60 }], -180)).toEqual([{ start: 9 * 60, end: 18 * 60 }]);
   });
 
+  it('puts back together a range that was split at UTC midnight', () => {
+    // Auckland's 09:00–18:00 is 20:00–05:00 UTC: two segments in UTC, one locally
+    const { visitor } = overlap(BA, 'Pacific/Auckland', { ...hours, date: JANUARY });
+    expect(shift(visitor, 13 * 60)).toEqual([{ start: 9 * 60, end: 18 * 60 }]);
+  });
+
   it('joins ranges split at midnight', () => {
     expect(joinAcrossMidnight([{ start: 9 * 60, end: 10 * 60 }])).toEqual([{ start: 9 * 60, end: 10 * 60 }]);
     expect(

@@ -7,6 +7,9 @@
   --_home: var(--tom-home, oklch(0.72 0.14 200));
   --_visitor: var(--tom-visitor, oklch(0.75 0.15 70));
   --_both: var(--tom-overlap, oklch(0.72 0.17 145));
+  --_land: var(--tom-land, color-mix(in oklch, var(--_fg) 22%, transparent));
+  --_night: var(--tom-night, oklch(0 0 0 / 0.42));
+  --_sun: var(--tom-sun, oklch(0.97 0.06 95));
   --_radius: var(--tom-radius, 4px);
 
   display: block;
@@ -22,6 +25,55 @@
 .widget {
   display: grid;
   gap: 1rem;
+}
+
+.map {
+  display: block;
+  inline-size: 100%;
+  block-size: auto;
+  overflow: hidden;
+}
+
+.land {
+  fill: var(--_land);
+}
+
+.band rect {
+  opacity: 0.28;
+}
+
+.band.home rect {
+  fill: var(--_home);
+}
+
+.band.visitor rect {
+  fill: var(--_visitor);
+}
+
+.night {
+  fill: var(--_night);
+}
+
+.sun {
+  fill: var(--_sun);
+}
+
+.sun-halo {
+  fill: var(--_sun);
+  opacity: 0.22;
+}
+
+.dot {
+  stroke: var(--_fg);
+  stroke-width: 0.75;
+}
+
+.dot.home {
+  fill: var(--_home);
+}
+
+.dot.visitor {
+  fill: var(--_visitor);
 }
 
 .clocks {

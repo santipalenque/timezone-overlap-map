@@ -16,7 +16,11 @@
     <timezone-overlap-map home-zone="America/Argentina/Buenos_Aires" home-label="Santiago"></timezone-overlap-map>
     <pre id="log"></pre>
     <script type="module">
-      document.querySelector('timezone-overlap-map').addEventListener('zonechange', (event) => {
+      const map = document.querySelector('timezone-overlap-map');
+      // ?visitor=Asia/Tokyo to try another zone
+      const visitor = new URLSearchParams(location.search).get('visitor');
+      if (visitor) map.setAttribute('visitor-zone', visitor);
+      map.addEventListener('zonechange', (event) => {
         document.getElementById('log').textContent = `zonechange → ${event.detail.zone}`;
       });
     </script>
