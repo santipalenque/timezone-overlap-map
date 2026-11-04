@@ -1,8 +1,81 @@
 # timezone-overlap-map
 
-A world map widget that shows two timezones, the day/night line, and how their working hours overlap.
+A web component that shows your timezone next to your visitor's, and how your working hours overlap. Built with React and TypeScript, shipped as a standard custom element, so it works in any framework or in plain HTML.
 
-Work in progress.
+> Work in progress: the world map is next. Today the widget shows both clocks, a 24-hour timeline and the overlap.
+
+## Install
+
+```sh
+npm install timezone-overlap-map react react-dom
+```
+
+React is a peer dependency: your bundler provides it.
+
+## Usage
+
+```js
+import 'timezone-overlap-map';
+```
+
+```html
+<timezone-overlap-map
+  home-zone="America/Argentina/Buenos_Aires"
+  home-label="Santiago"
+></timezone-overlap-map>
+```
+
+The visitor's zone comes from the browser (`Intl`), with no IP lookup. A selector lets them pick another one, for example a recruiter hiring for a team in a different zone.
+
+### Attributes
+
+| Attribute | Default | |
+|---|---|---|
+| `home-zone` | `UTC` | IANA zone you work from |
+| `home-label` | city of `home-zone` | Name shown for your side |
+| `visitor-zone` | the browser's zone | Starting zone for the visitor |
+| `work-start` | `9` | Start of working hours, local time in each zone |
+| `work-end` | `18` | End of working hours (a value before `work-start` means a night shift) |
+
+Offsets are computed with `Intl` for the current date, so daylight saving time on either side is always right.
+
+### Events
+
+`zonechange` fires when the visitor picks another zone:
+
+```js
+el.addEventListener('zonechange', (event) => console.log(event.detail.zone));
+```
+
+### Theming
+
+Styles live in the shadow DOM. Custom properties cross it, so set them on the element or any ancestor:
+
+```css
+timezone-overlap-map {
+  --tom-fg: #e8e6e3;
+  --tom-muted: #9a9894;
+  --tom-track: #ffffff1a;
+  --tom-home: #4fd1c5;
+  --tom-visitor: #f6ad55;
+  --tom-overlap: #68d391;
+  --tom-radius: 4px;
+  --tom-font: 14px/1.5 system-ui;
+}
+```
+
+### Server rendering
+
+Importing the package on the server is safe: the element registers only where `customElements` exists.
+
+## Development
+
+```sh
+yarn
+yarn dev       # demo page at http://localhost:5173
+yarn test
+yarn build     # dist/: ES module + type declarations
+```
 
 ## License
 

@@ -1,0 +1,51 @@
+{
+  "name": "timezone-overlap-map",
+  "version": "0.0.0",
+  "description": "A web component that shows two timezones and how their working hours overlap",
+  "license": "MIT",
+  "author": "Santiago Palenque",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/santipalenque/timezone-overlap-map.git"
+  },
+  "keywords": [
+    "timezone",
+    "web-component",
+    "custom-element",
+    "working-hours",
+    "remote",
+    "react"
+  ],
+  "type": "module",
+  "exports": {
+    ".": {
+      "types": "./dist/index.d.ts",
+      "default": "./dist/timezone-overlap-map.js"
+    }
+  },
+  "files": [
+    "dist"
+  ],
+  "sideEffects": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build && tsc -p tsconfig.build.json",
+    "test": "vitest run",
+    "typecheck": "tsc --noEmit"
+  },
+  "peerDependencies": {
+    "react": "^18.2.0 || ^19.0.0",
+    "react-dom": "^18.2.0 || ^19.0.0"
+  },
+  "devDependencies": {
+    "@types/react": "19.3.0",
+    "@types/react-dom": "19.3.0",
+    "@vitejs/plugin-react": "6.2.1",
+    "happy-dom": "21.0.4",
+    "react": "19.3.1",
+    "react-dom": "19.3.1",
+    "typescript": "7.0.2",
+    "vite": "8.3.5",
+    "vitest": "5.1.0"
+  }
+}

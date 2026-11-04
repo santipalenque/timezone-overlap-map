@@ -1,0 +1,125 @@
+/* Themeable from outside: custom properties cross the shadow boundary. */
+:host {
+  --_bg: var(--tom-bg, transparent);
+  --_fg: var(--tom-fg, CanvasText);
+  --_muted: var(--tom-muted, color-mix(in oklch, var(--_fg) 55%, transparent));
+  --_track: var(--tom-track, color-mix(in oklch, var(--_fg) 10%, transparent));
+  --_home: var(--tom-home, oklch(0.72 0.14 200));
+  --_visitor: var(--tom-visitor, oklch(0.75 0.15 70));
+  --_both: var(--tom-overlap, oklch(0.72 0.17 145));
+  --_radius: var(--tom-radius, 4px);
+
+  display: block;
+  font: var(--tom-font, inherit);
+  color: var(--_fg);
+  background: var(--_bg);
+}
+
+:host([hidden]) {
+  display: none;
+}
+
+.widget {
+  display: grid;
+  gap: 1rem;
+}
+
+.clocks {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 0.5rem 1.5rem;
+}
+
+.clock {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  margin: 0;
+}
+
+.clock time {
+  font-variant-numeric: tabular-nums;
+  color: var(--_muted);
+}
+
+select {
+  font: inherit;
+  color: inherit;
+  background: transparent;
+  border: 1px solid var(--_track);
+  border-radius: var(--_radius);
+  padding: 0.125rem 0.25rem;
+  max-width: 16rem;
+}
+
+.swatch {
+  inline-size: 0.75rem;
+  block-size: 0.75rem;
+  border-radius: 50%;
+}
+
+.timeline {
+  position: relative;
+  display: grid;
+  gap: 0.25rem;
+  padding-block-end: 1.25rem;
+}
+
+.track {
+  position: relative;
+  block-size: 0.5rem;
+  border-radius: var(--_radius);
+  background: var(--_track);
+}
+
+.track > span {
+  position: absolute;
+  inset-block: 0;
+  border-radius: var(--_radius);
+}
+
+.home {
+  background: var(--_home);
+}
+
+.visitor {
+  background: var(--_visitor);
+}
+
+.both {
+  background: var(--_both);
+}
+
+.now {
+  position: absolute;
+  inset-block: -0.25rem 1rem;
+  inline-size: 2px;
+  translate: -1px 0;
+  background: var(--_fg);
+}
+
+.ticks {
+  position: absolute;
+  inset-inline: 0;
+  inset-block-end: 0;
+  font-size: 0.75em;
+  color: var(--_muted);
+}
+
+.ticks > span {
+  position: absolute;
+  translate: -50% 0;
+}
+
+.ticks > span:first-child {
+  translate: 0 0;
+}
+
+.ticks > span:last-child {
+  translate: -100% 0;
+}
+
+.summary {
+  margin: 0;
+}
