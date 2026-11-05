@@ -1,6 +1,6 @@
 {
   "name": "timezone-overlap-map",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "A web component that shows two timezones and how their working hours overlap",
   "license": "MIT",
   "author": "Santiago Palenque",
