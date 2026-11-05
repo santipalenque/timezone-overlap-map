@@ -1,5 +1,5 @@
 import { useEffect, useMemo, useState } from 'react';
-import { DAY, joinAcrossMidnight, mod, offsetMinutes, overlap, shift, type Segment } from './overlap';
+import { joinAcrossMidnight, mod, offsetMinutes, overlap, shift, type Segment } from './overlap';
 import { MESSAGES, type Lang } from './messages';
 import { WorldMap } from './WorldMap';
 import { cityName, listZones } from './zones';
@@ -44,20 +44,6 @@ const ranges = (segments: Segment[]) =>
     .map((seg) => `${hhmm(seg.start)}–${hhmm(seg.end)}`)
     .join(', ');
 
-function Bar({ segments, className }: { segments: Segment[]; className: string }) {
-  return (
-    <div className="track">
-      {segments.map((seg) => (
-        <span
-          key={seg.start}
-          className={className}
-          style={{ left: `${(seg.start / DAY) * 100}%`, width: `${((seg.end - seg.start) / DAY) * 100}%` }}
-        />
-      ))}
-    </div>
-  );
-}
-
 export function TimezoneOverlap({
   homeZone,
   homeLabel,
@@ -77,10 +63,13 @@ export function TimezoneOverlap({
     [homeZone, visitorZone, workStart, workEnd, now],
   );
 
-  // the timeline is drawn in the visitor's local day
-  const local = offsetMinutes(visitorZone, now);
-  const nowMinute = mod(now.getUTCHours() * 60 + now.getUTCMinutes() + local);
+  // the map is drawn in the home zone's day: home hours stay put, the visitor's move with their zone
+  const axis = offsetMinutes(homeZone, now);
+  const nowMinute = mod(now.getUTCHours() * 60 + now.getUTCMinutes() + axis);
   const home = homeLabel || cityName(homeZone);
+  const both = shift(result.both, axis);
+  // the summary speaks in the visitor's own time
+  const visitorBoth = shift(result.both, offsetMinutes(visitorZone, now));
 
   function choose(zone: string) {
     setVisitorZone(zone);
@@ -89,7 +78,27 @@ export function TimezoneOverlap({
 
   return (
     <div className="widget">
-      <WorldMap homeZone={homeZone} visitorZone={visitorZone} now={now} />
+      <div className="chart">
+        <WorldMap
+          homeZone={homeZone}
+          visitorZone={visitorZone}
+          now={now}
+          home={shift(result.home, axis)}
+          visitor={shift(result.visitor, axis)}
+          both={both}
+          nowMinute={nowMinute}
+          label={duration(result.minutes)}
+        />
+        {/* the map's width is the home zone's day */}
+        <div className="ticks" aria-hidden="true">
+          {[0, 6, 12, 18, 24].map((h) => (
+            <span key={h} style={{ left: `${(h / 24) * 100}%` }}>
+              {hhmm(h * 60).slice(0, 2)}
+            </span>
+          ))}
+        </div>
+        <p className="axis-name" aria-hidden="true">{t.axis(home)}</p>
+      </div>
 
       <div className="clocks">
         <p className="clock">
@@ -109,23 +118,9 @@ export function TimezoneOverlap({
         </label>
       </div>
 
-      <div className="timeline" aria-hidden="true">
-        <Bar segments={shift(result.home, local)} className="home" />
-        <Bar segments={shift(result.visitor, local)} className="visitor" />
-        <Bar segments={shift(result.both, local)} className="both" />
-        <span className="now" style={{ left: `${(nowMinute / DAY) * 100}%` }} />
-        <div className="ticks">
-          {[0, 6, 12, 18, 24].map((h) => (
-            <span key={h} style={{ left: `${(h / 24) * 100}%` }}>
-              {hhmm(h * 60).slice(0, 2)}
-            </span>
-          ))}
-        </div>
-      </div>
-
       <p className="summary" role="status">
         {result.minutes > 0
-          ? t.overlap(duration(result.minutes), home, ranges(shift(result.both, local)))
+          ? t.overlap(duration(result.minutes), home, ranges(visitorBoth))
           : t.none(home)}
       </p>
     </div>

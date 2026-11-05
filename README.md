@@ -2,9 +2,9 @@
 
 A web component that shows your timezone next to your visitor's on a world map, and how your working hours overlap. Built with React and TypeScript, shipped as a standard custom element, so it works in any framework or in plain HTML.
 
-- A world map with each zone's UTC-offset strip, a dot per city, and the live day/night line with the sun's position.
-- Both clocks and a zone picker that starts at the visitor's zone.
-- A 24-hour timeline in the visitor's local time, and the overlap as text for screen readers.
+- A world map read as your day, 00 to 24: your working hours stay put, the visitor's slide with their zone, and the overlap is labeled with its length ("5 h").
+- A dot per city and the live day/night line with the sun's position.
+- Both clocks, a zone picker that starts at the visitor's zone, and the overlap in the visitor's own time as text (also for screen readers).
 
 About 15 KB gzipped, map included, plus React.
 

@@ -47,16 +47,40 @@
   fill: var(--_land);
 }
 
-.band rect {
-  opacity: 0.28;
+.window rect {
+  opacity: 0.22;
 }
 
-.band.home rect {
+.window.home rect {
   fill: var(--_home);
 }
 
-.band.visitor rect {
+.window.visitor rect {
   fill: var(--_visitor);
+}
+
+.window.both rect {
+  fill: var(--_both);
+  opacity: 0.5;
+}
+
+.map .now {
+  stroke: var(--_fg);
+  stroke-width: 0.75;
+  stroke-dasharray: 2 2;
+}
+
+/* the overlap's length, written on it: a halo keeps it readable over land and night */
+.label {
+  fill: var(--_fg);
+  font-size: 14px;
+  font-weight: 700;
+  text-anchor: middle;
+  dominant-baseline: central;
+  paint-order: stroke;
+  stroke: var(--tom-bg, Canvas);
+  stroke-width: 3px;
+  stroke-linejoin: round;
 }
 
 .night {
@@ -136,50 +160,17 @@ select {
   border-radius: 50%;
 }
 
-.timeline {
-  position: relative;
-  display: grid;
-  gap: 0.25rem;
-  padding-block-end: 1.25rem;
-}
-
-.track {
-  position: relative;
-  block-size: 0.5rem;
-  border-radius: var(--_radius);
-  background: var(--_track);
-}
-
-.track > span {
-  position: absolute;
-  inset-block: 0;
-  border-radius: var(--_radius);
-}
-
-.home {
+.swatch.home {
   background: var(--_home);
 }
 
-.visitor {
+.swatch.visitor {
   background: var(--_visitor);
 }
 
-.both {
-  background: var(--_both);
-}
-
-.now {
-  position: absolute;
-  inset-block: -0.25rem 1rem;
-  inline-size: 2px;
-  translate: -1px 0;
-  background: var(--_fg);
-}
-
 .ticks {
-  position: absolute;
-  inset-inline: 0;
-  inset-block-end: 0;
+  position: relative;
+  block-size: 1.5em;
   font-size: 0.75em;
   color: var(--_muted);
 }
@@ -195,6 +186,13 @@ select {
 
 .ticks > span:last-child {
   translate: -100% 0;
+}
+
+.axis-name {
+  margin: 0;
+  font-size: 0.75em;
+  text-align: center;
+  color: var(--_muted);
 }
 
 .summary {
